@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const session = require('express-session');
 // =======================================
 //              DATABASE
 // =======================================
@@ -28,32 +29,29 @@ db.on('disconnected', () => console.log('mongo disconnected'));
 // Body parser middleware: give us access to req.body
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+    session({
+        secret: process.env.SECRET,
+        resave: false,
+        saveUninitialized: false
+    }));
 // =======================================
 //              ROUTES
 // =======================================
-// Routes / Controllers
+
+// Controllers (links server routes to the contoller routes)
 const userController = require('./controllers/users');
 app.use('/users', userController);
 
-// INDEX (get)
+const sessionsController = require('./controllers/sessions');
+app.use('/sessions', sessionsController);
 
 
-// NEW (get)
+// Temporary root route. Please remove me when you add views:
+app.get("/", (req, res) => {
+    res.send("Root route");
+});
 
-
-// DESTROY (delete)
-
-
-// UPDATE (put)
-
-
-// CREATE (post)
-
-
-//EDIT (get) (put)
-
-
-// SHOW (get)
 
 
 // =======================================
